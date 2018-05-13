@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wang.goods.mapper.InforImageMapper">
+
+	<!-- 将所有字段查出 -->
+	<sql id="inforImageSql">
+		pro_id id,
+		pro_level level,
+		pro_image image
+	</sql>
+
+	<!-- 根据商品的id获取对应的详情展示图片 -->
+	<select id="getInforImageListByProId" parameterType="java.lang.String"
+			resultType="productInforImage">
+		SELECT
+		<include refid="inforImageSql" />
+		FROM
+		pro_infor_image
+		WHERE
+		pro_id = #{proId}
+	</select>
+
+	<!-- 添加商品详情的展示图 -->
+	<insert id="addProInforImage" >
+		INSERT INTO pro_infor_image
+		(
+		pro_id ,pro_level ,pro_image
+		)
+		VALUES
+		<foreach collection="infors" item="infor" separator=",">
+			(
+			#{infor.id} ,#{infor.level} ,#{infor.image}
+			)
+		</foreach>
+	</insert>
+
+</mapper>

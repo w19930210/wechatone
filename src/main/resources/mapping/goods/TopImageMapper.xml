@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wang.goods.mapper.TopImageMapper">
+
+	<!-- 将所有字段查出 -->
+	<sql id="topImageSql">
+		pro_id id,
+		pro_level level,
+		pro_image image
+	</sql>
+
+	<!-- 根据商品的id获取对应的顶部展示图 -->
+	<select id="getTopImageListByProId" parameterType="java.lang.String"
+			resultType="productTopImage">
+		SELECT
+			<include refid="topImageSql" />
+		FROM
+			pro_top_image
+		WHERE
+			pro_id = #{proId}
+	</select>
+
+	<!-- 根据商品的id获取商品展示列表的左侧展示图一张 -->
+	<select id="getListProImageByProId" parameterType="java.lang.String"
+			resultType="productTopImage">
+		SELECT
+			<include refid="topImageSql" />
+		FROM
+			pro_top_image
+		WHERE
+			pro_id = #{proId}
+			AND pro_image LIKE '%60x60%'
+		ORDER BY pro_level
+		limit 0,1
+	</select>
+
+	<!-- 添加商品顶部的展示图 -->
+	<insert id="addProTopImage" >
+		INSERT INTO pro_top_image
+		(
+			pro_id ,pro_level ,pro_image
+		)
+		VALUES
+		<foreach collection="tops" item="top" separator=",">
+			(
+				#{top.id} ,#{top.level} ,#{top.image}
+			)
+		</foreach>
+	</insert>
+
+</mapper>

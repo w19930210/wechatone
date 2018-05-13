@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wang.goods.mapper.AttrMapper">
+
+	<!-- 将商品的所有字段查出 -->
+	<sql id="attrSql">
+		pro_id id,
+		attr_name name,
+		attr_image image
+	</sql>
+
+	<!-- 根据商品的id获取对应的颜色类型 -->
+	<select id="getAttrListByProId" parameterType="java.lang.String"
+			resultType="productAttr">
+		SELECT
+			<include refid="attrSql" />
+		FROM
+			pro_attr
+		WHERE
+			pro_id = #{proId}
+	</select>
+
+	<!-- 添加商品的颜色 -->
+	<insert id="addProAttr" >
+		INSERT INTO pro_attr
+		(
+			pro_id ,attr_name ,attr_image
+		)
+		VALUES
+		<foreach collection="attrs" item="attr" separator=",">
+			(
+				#{attr.id} ,#{attr.name} ,#{attr.image}
+			)
+		</foreach>
+	</insert>
+
+</mapper>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wang.goods.mapper.ProductMapper">
+
+	<!-- 客户获取的字段 -->
+	<sql id="productClient">
+		id id,
+		ddg_name name,
+		ddg_price price,
+		ddg_number number,
+		ddg_oneprice onePrice,
+		ddg_time time,
+		TIMESTAMPDIFF(MINUTE,SYSDATE(),ddg_time) intervalTime
+	</sql>
+
+	<!-- 客户获取全部商品的详情 -->
+	<select id="getAllGoods" resultType="ddgProduct">
+		SELECT
+			<include refid="productClient" />
+		FROM
+			product
+	</select>
+
+	<!-- 客户获取商品的详情，根据商品的id -->
+	<select id="getGoodsByProId" parameterType="java.lang.String"
+			resultType="ddgProduct">
+		SELECT
+			<include refid="productClient" />
+		FROM
+			product
+		WHERE
+			id = #{proId}
+	</select>
+
+	<!-- 客户获取今日上新的商品 -->
+	<select id="getGoodsByToday" resultType="ddgProduct">
+		SELECT
+			<include refid="productClient" />
+		FROM
+			product
+		WHERE
+			newtime &gt;= DATE_SUB(SYSDATE(),INTERVAL 1 DAY)
+
+	</select>
+
+	<!-- 客户获取离结束还有24小时的商品 -->
+	<select id="getGoodsByLast" resultType="ddgProduct">
+		SELECT
+			<include refid="productClient" />
+		FROM
+			product
+		WHERE
+			ddg_time &lt;= DATE_SUB(SYSDATE(),INTERVAL -1 DAY)
+			AND ddg_time &gt;= SYSDATE();
+	</select>
+
+	<!-- 添加商品的详情 -->
+	<insert id="addProduct" parameterType="ddgProduct" >
+		INSERT INTO product
+		(
+	  		id, ddg_name, ddg_price, ddg_number, ddg_oneprice, ddg_time,
+			ali_name, ali_html, ali_price, ali_express, ali_number, ali_time,
+			newtime
+		)
+		VALUES
+		(
+			#{id}, #{name}, #{price}, #{ali_number}, #{onePrice},
+			str_to_date(#{ali_time},'%Y-%m-%d %H'),
+			#{ali_name}, #{ali_html}, #{ali_price}, #{ali_express}, #{ali_number},
+			str_to_date(#{ali_time},'%Y-%m-%d %H'),
+			sysdate()
+		)
+	</insert>
+
+</mapper>

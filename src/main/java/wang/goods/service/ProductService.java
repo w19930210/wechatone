@@ -15,10 +15,10 @@ public interface ProductService {
     Page getAllGoods(Integer pageNum, Integer pageSize);
 
     //客户获取今日上新的商品,即24小时内上新的商品
-    List<DdgProduct> getGoodsByToday();
+    Page getGoodsByToday(Integer pageNum, Integer pageSize);
 
     //客户获取离结束还有24小时的商品
-    List<DdgProduct> getGoodsByLast();
+    Page getGoodsByLast(Integer pageNum, Integer pageSize);
 
     //客户获取商品的详情，根据商品的id
     List<DdgProduct> getGoodsByProId(String proId);

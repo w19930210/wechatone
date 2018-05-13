@@ -30,30 +30,27 @@ public class GoodsController {
     @ResponseBody
     public Page getAllGoods(@PathVariable("pageNum")Integer pageNum
             , @PathVariable("pageSize")Integer pageSize){
-        Page page = productService.getAllGoods(pageNum,pageSize);
-        System.out.println(page.getTotal());
-        System.out.println(page.getPages());
-        return page;
+        return productService.getAllGoods(pageNum,pageSize);
     }
 
     /**
      * 获取今日(即上架24小时内)的商品
      */
-    @RequestMapping("getGoodsByToday")
+    @RequestMapping("getGoodsByToday/{pageNum}/{pageSize}")
     @ResponseBody
-    public List<DdgProduct> getGoodsByToday(){
-        List<DdgProduct> list = productService.getGoodsByToday();
-        return list;
+    public Page getGoodsByToday(@PathVariable("pageNum")Integer pageNum
+            , @PathVariable("pageSize")Integer pageSize){
+        return productService.getGoodsByToday(pageNum,pageSize);
     }
 
     /**
      * 获取即将售罄(即离技术还有24小时)的商品
      */
-    @RequestMapping("getGoodsByLast")
+    @RequestMapping("getGoodsByLast/{pageNum}/{pageSize}")
     @ResponseBody
-    public List<DdgProduct> getGoodsByLast(){
-        List<DdgProduct> list = productService.getGoodsByLast();
-        return list;
+    public Page getGoodsByLast(@PathVariable("pageNum")Integer pageNum
+            , @PathVariable("pageSize")Integer pageSize){
+        return productService.getGoodsByLast(pageNum,pageSize);
     }
 
     /**
@@ -62,8 +59,7 @@ public class GoodsController {
     @RequestMapping("getGoodsByProId/{proId}")
     @ResponseBody
     public List<DdgProduct> getGoodsByProId(@PathVariable("proId")String proId){
-        List<DdgProduct> list = productService.getGoodsByProId(proId);
-        return list;
+        return productService.getGoodsByProId(proId);
     }
 
 

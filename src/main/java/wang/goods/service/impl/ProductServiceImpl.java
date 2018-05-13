@@ -47,12 +47,11 @@ public class ProductServiceImpl implements ProductService {
     private InforImageService inforImageService;
 
     /**
-     * 客户获取商品的展示列表
-     * 如果传入两个参数就分页
-     * 两个参数为null就全部获取
+     * 客户分页获取商品列表
+     * @param pageNum 当前页数
+     * @param pageSize 每页显示的条数
      */
     public Page getAllGoods(Integer pageNum, Integer pageSize) {
-        //当前页数,每页显示条数
         Page page = PageView.startDataPage(pageNum, pageSize);
 
         List<DdgProduct> result = productMapper.getAllGoods();
@@ -68,7 +67,8 @@ public class ProductServiceImpl implements ProductService {
     /**
      * 客户获取今日上新的商品,即24小时内上新的商品
      */
-    public List<DdgProduct> getGoodsByToday() {
+    public Page getGoodsByToday(Integer pageNum, Integer pageSize) {
+        Page page = PageView.startDataPage(pageNum, pageSize);
         List<DdgProduct> result = productMapper.getGoodsByToday();
         String proId;
         for (DdgProduct product : result){
@@ -76,13 +76,14 @@ public class ProductServiceImpl implements ProductService {
             ProductTopImage topImage = topImageService.getListProImageByProId(proId);
             product.setLeftImage(topImage.getImage());
         }
-        return result;
+        return page;
     }
 
     /**
      * 客户获取离结束还有24小时的商品
      */
-    public List<DdgProduct> getGoodsByLast() {
+    public Page getGoodsByLast(Integer pageNum, Integer pageSize) {
+        Page page = PageView.startDataPage(pageNum, pageSize);
         List<DdgProduct> result = productMapper.getGoodsByLast();
         String proId;
         for (DdgProduct product : result){
@@ -90,7 +91,7 @@ public class ProductServiceImpl implements ProductService {
             ProductTopImage topImage = topImageService.getListProImageByProId(proId);
             product.setLeftImage(topImage.getImage());
         }
-        return result;
+        return page;
     }
 
     /**
@@ -98,7 +99,7 @@ public class ProductServiceImpl implements ProductService {
      */
     public List<DdgProduct> getGoodsByProId(String proId) {
         if (proId == null || "".equals(proId))
-            return new ArrayList<DdgProduct>();
+            return new ArrayList<>();
         List<DdgProduct> result = productMapper.getGoodsByProId(proId);
         for (DdgProduct product : result){
             product.setAttrList(attrService.getAttrListByProId(proId));
@@ -130,7 +131,7 @@ public class ProductServiceImpl implements ProductService {
         StringBuilder htmlBuilder = new StringBuilder();
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-            String line = null;
+            String line;
             while ((line = reader.readLine()) != null) {
                 htmlBuilder.append(line);
             }
